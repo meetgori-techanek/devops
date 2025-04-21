@@ -1,5 +1,4 @@
 # ssl
-## install certbot
 
 1. install certbot on server:
 ```
