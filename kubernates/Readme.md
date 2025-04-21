@@ -10,7 +10,14 @@
   
 ## Pros and Cons
 - **Pros:**
-  - List of advantages.
+  - orchestration(clustring of any number of node containers on running on different networks)- kubernates support multicloud environments
+  - autoscaling: vertical and horizontal
+  - load balancing
+  - platform indipendent
+  - foult tollrance(it will heal/restart pod on failure)
+  - rollback
+  - health monitoring
+  - batch execution(one time, sequential and parallel)
 - **Cons:**
   - List of disadvantages.
 
