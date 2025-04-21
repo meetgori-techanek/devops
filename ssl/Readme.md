@@ -39,6 +39,7 @@ sudo certbot certonly --manual --preferred-challenges=dns  --installer nginx --e
 ```
 
 note: need to add txt records manually in domain providers and ser ttl 2 minutes and need to wait for 2 minutes 
+
 note: it will not work with free domain try use paid domain
 
 3. need to configure nginx file and verify it then restart
