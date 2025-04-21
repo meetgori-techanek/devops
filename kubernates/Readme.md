@@ -34,61 +34,49 @@
 
 ## Fundamentals
 🔹 Cluster
-A Kubernetes Cluster consists of:
-
-Master Node (Control Plane): Manages the cluster and handles scheduling, scaling, and deployment.
-
-Worker Nodes: Where the actual applications (containers) run.
+  A Kubernetes Cluster consists of:
+    Master Node (Control Plane): Manages the cluster and handles scheduling, scaling, and deployment.
+    Worker Nodes: Where the actual applications (containers) run.
 
 🔹 Pod
-The smallest deployable unit in Kubernetes.
-
-A Pod can contain one or more tightly coupled containers that share the same network and storage.
+    The smallest deployable unit in Kubernetes.
+    A Pod can contain one or more tightly coupled containers that share the same network and storage.
 
 🔹 Node
-A Node is a physical or virtual machine in the cluster.
+    A Node is a physical or virtual machine in the cluster.
 
 Each node contains:
-
 Kubelet (agent)
-
 Container Runtime (e.g., Docker, containerd)
-
 Kube Proxy (networking)
 
 🔹 Deployment
-Defines the desired state for Pods and manages their lifecycle (e.g., rolling updates, rollbacks).
-
-Ensures the specified number of Pods are running at any given time.
+  Defines the desired state for Pods and manages their lifecycle (e.g., rolling updates, rollbacks).
+  Ensures the specified number of Pods are running at any given time.
 
 🔹 Service
-Exposes an application running on a set of Pods as a network service.
+  Exposes an application running on a set of Pods as a network service.
 
-Types include:
+  Types include:
 
-ClusterIP: Internal communication
-
-NodePort: Exposes service on each Node’s IP
-
-LoadBalancer: External access via cloud provider load balancer
+  ClusterIP: Internal communication
+  NodePort: Exposes service on each Node’s IP
+  LoadBalancer: External access via cloud provider load balancer
 
 🔹 Namespace
-Logical partitions within a cluster for isolating resources and managing permissions.
+  Logical partitions within a cluster for isolating resources and managing permissions.
 
 🔹 ConfigMap & Secret
-ConfigMap: External configuration (non-sensitive).
-
-Secret: Stores sensitive information like passwords or tokens securely.
+  ConfigMap: External configuration (non-sensitive).
+  Secret: Stores sensitive information like passwords or tokens securely.
 
 🔹 Volume
-Persistent storage attached to a Pod.
-
-Can be cloud-based (e.g., AWS EBS) or local.
+  Persistent storage attached to a Pod.
+  Can be cloud-based (e.g., AWS EBS) or local.
 
 🔹 Ingress
-Manages external access to services, typically via HTTP.
-
-Supports load balancing, SSL termination, and name-based virtual hosting.
+  Manages external access to services, typically via HTTP.
+  Supports load balancing, SSL termination, and name-based virtual hosting.
 
 ## Architecture
 - Overview of the system architecture and components.
