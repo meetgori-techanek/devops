@@ -1,7 +1,9 @@
 # Kubernates
 
 ## History
-- Brief overview of the project's history and evolution.
+- it is open source container management tool
+- developed by google in 2014 for internally management, initianlly named as coorg
+- written in golang
 
 ## Why Use
 - Reasons for using this tool in DevOps practices.
