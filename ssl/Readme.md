@@ -16,7 +16,7 @@ this will redirect http traffic to https
 ```
 server{
         listen 80;
-        server_name test.techanek.net;
+        server_name <domain-name>;
         return 301 https://$host$request_uri;
         #root /var/www/html;
         }
@@ -26,8 +26,8 @@ need to remove port 80 from config
 ```
   listen 443 ssl default_server;
          listen [::]:443 ssl default_server;
-         ssl_certificate  /etc/letsencrypt/live/techanek.net/fullchain.pem;
-         ssl_certificate_key /etc/letsencrypt/live/techanek.net/privkey.pem;
+         ssl_certificate  /etc/letsencrypt/live/<domain-name>/fullchain.pem;
+         ssl_certificate_key /etc/letsencrypt/live/<domain-name>/privkey.pem;
 ```
 
 once this added then vertify and restart nginx 
