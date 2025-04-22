@@ -162,9 +162,9 @@ Each Node runs the services needed to support containers.
 
 
 ### Higher level kubernates Objects
-Replication set: Provides auto-healing and auto-scaling (not provided by default in K8s).
-deployment: Adds versioning and rollback capabilities to ReplicationSets.
-service:	Exposes pods via static IP and DNS, enabling stable networking.
+Replication set: Provides auto-healing and auto-scaling (not provided by default in K8s).\
+deployment: Adds versioning and rollback capabilities to ReplicationSets.\
+service:	Exposes pods via static IP and DNS, enabling stable networking.\
 volume: Provides persistent (non-ephemeral) storage across pod lifecycles.
      
 ## Installation
