@@ -37,12 +37,14 @@
     A Kubernetes Cluster consists of:
     Master Node (Control Plane): Manages the cluster and handles scheduling, scaling, and deployment.
     Worker Nodes: Where the actual applications (containers) run.
+    
 🔹 Node
     A Node is a physical or virtual machine in the cluster.
     Each node contains:
     - Kubelet (agent)
     - Container Runtime (e.g., Docker, containerd)
     - Kube Proxy (networking)
+    
 🔹 Pod
     The smallest deployable unit in Kubernetes.
     A Pod can contain one or more tightly coupled containers that share the same network and storage.
@@ -50,6 +52,7 @@
 🔹 Deployment
   Defines the desired state for Pods and manages their lifecycle (e.g., rolling updates, rollbacks).
   Ensures the specified number of Pods are running at any given time.
+  
 🔹 Service
   Exposes an application running on a set of Pods as a network service.
   Types include:
