@@ -77,7 +77,8 @@
   Supports load balancing, SSL termination, and name-based virtual hosting.
 
 ## Architecture
-![image](https://github.com/user-attachments/assets/9e8b19c6-7fe1-40c9-b499-c5b7d4103544)
+![image](https://kubernetes.io/images/docs/kubernetes-cluster-architecture.svg)
+
 
 ### Control Plane
 **Component of Control Plane**
