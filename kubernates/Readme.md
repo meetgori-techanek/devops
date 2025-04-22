@@ -55,6 +55,7 @@
   
 🔹 Service
   Exposes an application running on a set of Pods as a network service.
+  
   Types include:
   - ClusterIP: Internal communication
   - NodePort: Exposes service on each Node’s IP
@@ -78,7 +79,35 @@
 ## Architecture
 ![image](https://github.com/user-attachments/assets/9e8b19c6-7fe1-40c9-b499-c5b7d4103544)
 
-- Overview of the system architecture and components.
+**Control Plane**
+# Component of Control Plane
+- Kube-apiserver
+- etcd
+- kube-scheduler
+- controller-manager
+
+1. Kube-apiserver(for all commuinication)
+   - it ineracts direclty with user (using manifest file of .yml or .json)
+   - this kube-apiserver is scale automatically as per load
+   - it is frontend of control plane
+
+2. etcd(database)
+   - stores metadata and status of cluster
+   - it it consistant and high-avaiable store(key-value)
+     Features :
+     1. Fully replicates: the entire state is available on everynode in the cluster
+     2. secure: implements automatics tls with optimal client-certificate authentication
+     3. fast: benchmarked at 10,000 writes per second
+
+3. kube-scheduler(action)
+   - when user make request for the creation & management of pods, kube-scheduler is going to take action on these requests
+   - handles pod creation and management
+   - kube-scheduler match/assign any node to create and run pods
+   - scheduler watches for newly created pods that have no node assigned. for every pod that the scheduler discovers, the scheduler becomes responsible for finding best node for that pod to run on it.
+   - Scheduler get the information for hardware configuration from config/manifest files and schedules the pods on nodes accordingly
+  
+4. 
+   
 
 ## Installation
 - Step-by-step instructions for installing the tool.
