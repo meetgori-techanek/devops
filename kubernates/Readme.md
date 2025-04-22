@@ -79,8 +79,8 @@
 ## Architecture
 ![image](https://github.com/user-attachments/assets/9e8b19c6-7fe1-40c9-b499-c5b7d4103544)
 
-**Control Plane**
-# Component of Control Plane
+### Control Plane
+**Component of Control Plane**
 - Kube-apiserver
 - etcd
 - kube-scheduler
@@ -106,8 +106,19 @@
    - scheduler watches for newly created pods that have no node assigned. for every pod that the scheduler discovers, the scheduler becomes responsible for finding best node for that pod to run on it.
    - Scheduler get the information for hardware configuration from config/manifest files and schedules the pods on nodes accordingly
   
-4. 
+4. controller-manager
+   - make sure actual state of cluster mateches to desired state
+   - two possible cloise for controll manage:
+     1. cloud-controll-manager(work on aws/gcp/azure)
+     2. kube-controll-manager(work on non cloud/on-premisis environments)
    
+   **Components on master that runs controller**
+   1. node-controller: for checking the cloud provider to determine if a node has been detected in the cloud after it stops resonding
+   2. route-controller: responsible for setting up network routes in cloud
+   3. service-controller: responsible for load balancers on your cloud against services of type load balancer
+   4. volume-controller: for creating, attaching and mouting volumes and interacting with the cloud providers to orchestrate volume
+      
+### Nodes  
 
 ## Installation
 - Step-by-step instructions for installing the tool.
