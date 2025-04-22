@@ -119,7 +119,54 @@
    4. volume-controller: for creating, attaching and mouting volumes and interacting with the cloud providers to orchestrate volume
       
 ### Nodes  
+Each Node runs the services needed to support containers.
+**Component of Node**
+- Kubelet
+- Container Engine
+- kube-Proxy
 
+1. Kubelet
+   - kubelet agent in running on node
+   - listen to kubernates master(eg, pod creation request)
+   - use port 10255
+   - send success/fail reports to master
+   - kubelet communicate to controller-manager via api-server
+  
+2. Container Engine
+   - kunernates support multiple engines buy majorly work with docker only.
+   - works with kubelet
+   - pull image
+   - start/stop containers
+   - exposing containers on ports specified in manifest
+     
+3. Kube-proxy
+   - Runs on each node.
+   - Assigns unique IP addresses to each pod.
+   - kube-proxy runs on each node & this make sure that each pod will get its own unique ip address
+
+### Pode
+  - Smallest deployable unit in Kubernetes.
+  - A Pod contains one or more containers deployed together on the same host.
+  - Kubernetes manages pods, not individual containers.
+  - One pod per container is standard practice (even though multiple containers are allowed).
+  - in kubernates, the controll unit is the pod, not containers
+  - pod runs on node which runs by master
+  - Cannot start a container without a pod.
+    
+**multicontainer Pode**
+- Containers inside a pod:
+  - Share memory/network space.
+  - Communicate via localhost.
+  - Share the same volume (storage).
+  - Deployed in an all-or-nothing manner.
+
+
+### Higher level kubernates Objects
+Replication set: Provides auto-healing and auto-scaling (not provided by default in K8s).
+deployment: Adds versioning and rollback capabilities to ReplicationSets.
+service:	Exposes pods via static IP and DNS, enabling stable networking.
+volume: Provides persistent (non-ephemeral) storage across pod lifecycles.
+     
 ## Installation
 - Step-by-step instructions for installing the tool.
 
