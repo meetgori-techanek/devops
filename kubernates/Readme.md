@@ -212,8 +212,6 @@ Refrance: https://medium.com/@kvihanga/how-to-set-up-a-kubernetes-cluster-on-ubu
      ```
      sudo kubeadm init
      ```
-     > [!NOTE]
-     > it will return command at end like kubeadm join.... this command is required to run on pod to connect with it
   3. start using your cluster, set up the kubeconfig
      ```
      mkdir -p $HOME/.kube
