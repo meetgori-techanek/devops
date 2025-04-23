@@ -168,8 +168,65 @@ deployment: Adds versioning and rollback capabilities to ReplicationSets.\
 service:	Exposes pods via static IP and DNS, enabling stable networking.\
 volume: Provides persistent (non-ephemeral) storage across pod lifecycles.
      
-## Installation
-- Step-by-step instructions for installing the tool.
+## Custom Installation
+Refrance: https://medium.com/@kvihanga/how-to-set-up-a-kubernetes-cluster-on-ubuntu-22-04-lts-433548d9a7d0
+
+### common steps to perform on both master and worker
+1. need to create instance with min 2 cpu and 4 gb ram
+2. need to allow ports by following: https://kubernetes.io/docs/reference/networking/ports-and-protocols
+3. install docker on any container enginer
+  ```
+  sudo apt install docker.io -y
+  ```
+4. Install Kubernetes Components
+  Add the Kubernetes signing key and repository.
+  ```
+  sudo apt-get update
+  ```
+  ```
+ sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+  ```
+  ```
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  ```
+  ```
+  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  ```
+5. Install kubelet, kubeadm, and kubectl
+   ```
+   sudo apt-get update
+   ```
+   ```
+   sudo apt-get install -y kubelet kubeadm kubectl
+   ```
+   ```
+   sudo apt-mark hold kubelet kubeadm kubectl
+   ```
+
+### steps to perform on master
+  1. Install a pod network so that your nodes can communicate with each other
+     ```
+     kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+     ```
+  2. Initialize Kubernetes Master Node
+     ```
+     sudo kubeadm init
+     ```
+     > [!NOTE]
+     > it will return command at end like kubeadm join.... this command is required to run on pod to connect with it
+  3. start using your cluster, set up the kubeconfig
+     ```
+     mkdir -p $HOME/.kube
+     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+     ```
+### steps to perform on worker
+   1. run command which got end of kubeadm init like this one
+      ```
+      kubeadm join XX.XXX.XX.XXX:6443 --token z5zbph.rhwgfghx5ymzgyrhqtv \
+        --discovery-token-ca-cert-hash sha256:1014dadfgfgfd21eef23caa7dd4caffdbd1185sfdsdffdsfd9a1d99c71e57f25a93dbd1c60c5f12e
+      ```
+
 
 ## Commands
 - Common commands and their usage.
