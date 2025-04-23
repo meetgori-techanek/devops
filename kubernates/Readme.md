@@ -248,7 +248,32 @@ Refrance: https://medium.com/@kvihanga/how-to-set-up-a-kubernetes-cluster-on-ubu
 
 
 ## Commands
-- Common commands and their usage.
+- need to create manifest file eg: pod.yml
+
+- to create & run pod
+  ```
+  kubectl apply -f pod.yml 
+  ```
+- get list of running pods
+  ```
+  kubectl get pods
+  ```
+- get detail of specific pod
+  ```
+  kubectl describe pod <pod-name>
+  ```
+- get logs from specific container running on pod
+  ```
+  kuberctl logs -f <pod-name> -c <container-name>   
+  ```
+- get terminal access of specific continer running on pod
+  ```
+  kubectl exec <pod-name> -it -c <container-name> --/bin/bash
+-  delete pod
+  ```
+  kubectl delete pod <pod-name> 
+  ```
+
 
 ## Best Practices
 - Recommended practices for effective use.
