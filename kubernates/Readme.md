@@ -76,6 +76,17 @@
   Manages external access to services, typically via HTTP.
   Supports load balancing, SSL termination, and name-based virtual hosting.
 
+### kubernates objects
+- kubernates uses objects to represent the state of cluster
+- what containerized applications are running and on which node
+- the policies around how those applications behave, such as restart policies, upgrades and fault tolerance
+- once you create the object, the kubernates system will constantly work to ensure that object exist and maintains cluster's desired state
+- every kubernates object includes two nested fields that govern the object config(desired status), the object spec, and object status(actuall status)
+- the spec: which we provided in manifest, describes your desired states for the object characreistics that you want the object to have 
+- the status: destribes the actual state of the object and is supplied and updated by kubernates system
+- all objects are identified by a unique id
+- in short: pod,service, secrates etc all are objects
+
 ## Architecture
 ![image](https://kubernetes.io/images/docs/kubernetes-cluster-architecture.svg)
 
@@ -160,8 +171,7 @@ Each Node runs the services needed to support containers.
   - Communicate via localhost.
   - Share the same volume (storage).
   - Deployed in an all-or-nothing manner.
-
-
+ 
 ### Higher level kubernates Objects
 Replication set: Provides auto-healing and auto-scaling (not provided by default in K8s).\
 deployment: Adds versioning and rollback capabilities to ReplicationSets.\
@@ -228,6 +238,7 @@ Refrance: https://medium.com/@kvihanga/how-to-set-up-a-kubernetes-cluster-on-ubu
       kubeadm join XX.XXX.XX.XXX:6443 --token z5zbph.rhwgfghx5ymzgyrhqtv \
         --discovery-token-ca-cert-hash sha256:1014dadfgfgfd21eef23caa7dd4caffdbd1185sfdsdffdsfd9a1d99c71e57f25a93dbd1c60c5f12e
       ```
+
 
 
 ## Commands
