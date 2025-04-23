@@ -209,6 +209,9 @@ Refrance: https://medium.com/@kvihanga/how-to-set-up-a-kubernetes-cluster-on-ubu
      kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
      ```
   2. Initialize Kubernetes Master Node
+    > [!NOTE]
+    > it will return command at end like kubeadm join.... this command is required to run on pod to connect with it
+
      ```
      sudo kubeadm init
      ```
