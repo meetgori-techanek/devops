@@ -86,6 +86,12 @@
 - the status: destribes the actual state of the object and is supplied and updated by kubernates system
 - all objects are identified by a unique id
 - in short: pod,service, secrates etc all are objects
+ 
+basic objects
+| Pod  | Name space | Configmaps | Daemonsets |
+| ------------- | ------------- | ------------- |  ------------- |  
+| Service  | Replicasets  | Deployments |
+| Volume  | Secrates  | Jobs |
 
 ## Architecture
 ![image](https://kubernetes.io/images/docs/kubernetes-cluster-architecture.svg)
