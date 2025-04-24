@@ -168,3 +168,11 @@ Replication controller and replicaset is not able to do update & rollback apps i
 4. scale up the deployment to facilitates more load
 5. pause the deployment to apply multiple fixes to its podtemplatespec and then resume it to start a new rollout.
 6. cleanup older replicaset that you don't need anymore 
+
+**Reasons for failed deployments**
+1. insufficiant quota
+2. readiness probe failures
+3. image pull errors
+4. insufficiant permissions
+5. linit ranges
+6. application runtime misconfigurations 
