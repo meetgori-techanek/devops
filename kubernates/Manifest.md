@@ -151,3 +151,20 @@ spec:
 ```
  kubectl delete -f <file.yml>
 ```
+
+### Deployment & Rollback
+Replication controller and replicaset is not able to do update & rollback apps in the cluster 
+
+- deployment object act as a suprevisor for pods, giving you fine-grained control over how and when a new pod is rolled out, updated or rollback to previous state
+- when using deployment object, we first define the state of of the app, then k8s cluster schedules mentioned app instance onto specific individual nodes
+- k8s then monitors, if the node hosting on instance goes down or pod is deleted the deplotment controller replaces it.
+- this provides a self healing mechanism to address machine failure or maintainance
+- **A deplotment provides declarative updates for pods and replicas**
+
+**Typical use cases of deployments**
+1. create a deployment to rollout a replicaset -> the replicaset creates pods in the background. check the status of the rollout to see if it succeeds or not.
+2. declare the new state of the pods -> by updating the podtemplatespec of the deployment. A new replicaset is created and the deployment manages moving the pods from the old replicaset to new one at a controlled rate. Each new replicaset  updates the revision of the deployment.
+3. rollback to earlier deployment revision -> if the current state of the deployment is not stable. each rollback updates revision to earlier deplyment
+4. scale up the deployment to facilitates more load
+5. pause the deployment to apply multiple fixes to its podtemplatespec and then resume it to start a new rollout.
+6. cleanup older replicaset that you don't need anymore 
