@@ -174,5 +174,28 @@ Replication controller and replicaset is not able to do update & rollback apps i
 2. readiness probe failures
 3. image pull errors
 4. insufficiant permissions
-5. linit ranges
+5. limit ranges
 6. application runtime misconfigurations 
+
+**sample**
+```
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+   name: mydeployments
+spec:
+   replicas: 2
+   selector:     
+    matchLabels:
+     name: deployment
+   template:
+     metadata:
+       name: testpod
+       labels:
+         name: deployment
+     spec:
+      containers:
+        - name: c00
+          image: ubuntu
+          command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5; done"]
+```
