@@ -199,3 +199,39 @@ spec:
           image: ubuntu
           command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5; done"]
 ```
+
+- list all deployments
+```
+ kubectl get deploy
+```
+
+- all details of replicaset
+```
+ kubectl describe deploy <replica-controller-name>
+```
+- scale replicas with command
+```
+ kubectl scale --replicas=8 deploy <deployment-name>
+```
+- delete pods
+```
+ kubectl delete -f <file.yml>
+```
+- get logs from pod
+```
+ kubectl get logs -f <pod-name>
+```
+---
+
+ - get status of deployments
+```
+kubectl rollout status deployment <deployment-name>
+```
+- get history ot rollouts
+```
+kubectl rollout history deployment <deployment-name>
+```
+- rollback to previous version
+```
+kubectl rollout undo deploy/<deployment-name>
+```
