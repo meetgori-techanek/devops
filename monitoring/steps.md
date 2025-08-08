@@ -170,7 +170,7 @@ helm install alloy grafana/alloy -n monitoring
 ### Summary
 | Component      | Installed via | Namespace   |
 | -------------- | ------------- | ----------- |
-| Docker Image   | Docker CLI    | -           |
+| app            | Deployment    | go-app      |
 | Metrics Server | `kubectl`     | kube-system |
 | Helm           | `apt`         | -           |
 | Ingress NGINX  | Helm + YAML   | ingress     |
