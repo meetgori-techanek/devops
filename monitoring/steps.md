@@ -152,10 +152,7 @@ helm repo update
 ```
 ### Install/upgrade Loki
 ```
-helm upgrade loki grafana/loki-stack \
-  --namespace monitoring \
-  -f loki-values.yml \
-  -n monitoring
+helm install loki grafana/loki -n monitoring -f loki-values.yml
 ```
 ### Grafana Loki URL:
 ```
@@ -164,7 +161,7 @@ http://loki-gateway.monitoring.svc.cluster.local/
 
 ### Install Grafana Alloy 
 ```
-helm install alloy grafana/alloy -n monitoring
+helm install alloy grafana/alloy -n monitoring -f alloy-values.yml
 ```
 
 ### Summary
