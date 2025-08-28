@@ -18,3 +18,35 @@ key components
 
 - promithius is used for monitoring, logging and tracing
 - grafana is used for visuliszation
+
+
+### flow
+```
+     +-------------------------+
+     |      Kubernetes         |
+     |   (Apps & Services)     |
+     +-----------+-------------+
+                 |
+                 v
+        +--------+--------+
+        |     Alloy       |  <-- Unified collector agent
+        |  (on each node) |
+        +--------+--------+
+                 |
+     +-----------+-----------+-------------+
+     |                       |             |
+     v                       v             v
++----------+         +-------------+  +--------------+
+|   Loki   |  <---   |   Tempo     |  |   Metrics DB |
+| (Logs)   |         | (Traces)    |  | (Optional: Prometheus, Mimir) |
++----------+         +-------------+  +--------------+
+       \                     |                /
+        \____________________|_______________/
+                             |
+                             v
+                        +----------+
+                        | Grafana  |
+                        | (UI/UX)  |
+                        +----------+
+
+```
