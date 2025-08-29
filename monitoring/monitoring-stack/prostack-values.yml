@@ -1,0 +1,26 @@
+# Grafana configuration
+prometheus:
+  prometheusSpec:
+    # Enable remote write receiver for Tempo metrics (default: false)
+    enableRemoteWriteReceiver: true
+    # Enable exemplar storage for metrics-traces linking (default: [])
+    enableFeatures:
+      - exemplar-storage
+      - native-histograms
+
+grafana:
+   # Add Loki as a data source
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.monitoring.svc.cluster.local
+      access: proxy
+      isDefault: false
+      editable: true
+
+    - name: Tempo
+      type: tempo
+      access: proxy
+      url: http://tempo.monitoring:3200
+      isDefault: false
+      editable: true
