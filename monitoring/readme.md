@@ -22,14 +22,20 @@ key components
 
 ### flow
 ```
-     +-------------------------+
+      +-------------------------+
      |      Kubernetes         |
      |   (Apps & Services)     |
      +-----------+-------------+
                  |
                  v
+     +-----------+-----------+
+     |    OpenTelemetry      |   <-- SDKs or auto-instrumentation
+     |     Instrumentation   |
+     +-----------+-----------+
+                 |
+                 v
         +--------+--------+
-        |     Alloy       |  <-- Unified collector agent
+        |     Alloy       |  <-- Unified collector agent (receives OTLP)
         |  (on each node) |
         +--------+--------+
                  |
@@ -38,7 +44,7 @@ key components
      v                       v             v
 +----------+         +-------------+  +--------------+
 |   Loki   |  <---   |   Tempo     |  |   Metrics DB |
-| (Logs)   |         | (Traces)    |  | (Optional: Prometheus, Mimir) |
+| (Logs)   |         | (Traces)    |  | (Prometheus, Mimir, etc.) |
 +----------+         +-------------+  +--------------+
        \                     |                /
         \____________________|_______________/
@@ -48,5 +54,4 @@ key components
                         | Grafana  |
                         | (UI/UX)  |
                         +----------+
-
 ```
