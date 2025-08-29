@@ -164,6 +164,12 @@ http://loki-gateway.monitoring.svc.cluster.local/
 helm install alloy grafana/alloy -n monitoring -f alloy-values.yml
 ```
 
+### Install Grafana Tempo
+```
+helm install tempo grafana/tempo \
+  -n monitoring \
+  -f tempo-values.yml
+```
 ### Summary
 | Component      | Installed via | Namespace   |
 | -------------- | ------------- | ----------- |
