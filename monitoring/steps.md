@@ -181,4 +181,5 @@ helm install tempo grafana/tempo \
 | Grafana        | Helm Chart    | monitoring  |
 | Loki           | Helm Chart    | monitoring  |
 | Alloy          | Helm Chart    | monitoring  |
+| Tempo          | Helm Chart    | monitoring  |
 
