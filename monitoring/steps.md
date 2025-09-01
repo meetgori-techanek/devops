@@ -2,6 +2,42 @@
 
 This guide walks through the setup of a containerized logging app, Kubernetes metrics server, Helm, NGINX ingress, Prometheus, Grafana, Loki, and Alloy for full observability.
 
+### flow
+```
+      +-------------------------+
+     |      Kubernetes         |
+     |   (Apps & Services)     |
+     +-----------+-------------+
+                 |
+                 v
+     +-----------+-----------+
+     |    OpenTelemetry      |   <-- SDKs or auto-instrumentation
+     |     Instrumentation   |
+     +-----------+-----------+
+                 |
+                 v
+        +--------+--------+
+        |     Alloy       |  <-- Unified collector agent (receives OTLP)
+        |  (on each node) |
+        +--------+--------+
+                 |
+     +-----------+-----------+-------------+
+     |                       |             |
+     v                       v             v
++----------+         +-------------+  +--------------+
+|   Loki   |  <---   |   Tempo     |  |   Metrics DB |
+| (Logs)   |         | (Traces)    |  | (Prometheus, Mimir, etc.) |
++----------+         +-------------+  +--------------+
+       \                     |                /
+        \____________________|_______________/
+                             |
+                             v
+                        +----------+
+                        | Grafana  |
+                        | (UI/UX)  |
+                        +----------+
+```
+
 ---
 
 ## Build Docker Image & Push to Docker Hub
