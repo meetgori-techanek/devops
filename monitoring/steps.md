@@ -179,6 +179,16 @@ helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack
 ```
 helm upgrade my-kube-prometheus-stack prometheus-community/kube-prometheus-stack -n monitoring -f prom-values.yml
 ```
+### we don't require as we are deploying alloy(better to use seprate chart for all...)
+```
+helm upgrade my-kube-prometheus-stack \
+  --set prometheus-node-exporter.enabled=false \
+  -n monitoring prometheus-community/kube-prometheus-stack
+```
+### Delete Daemonset of node exporter
+```
+kubectl delete daemonset my-kube-prometheus-stack-prometheus-node-exporter -n monitoring
+```
 
 ## Install and Configure Loki, Alloy and Tempo
 ### Add Grafana repo
