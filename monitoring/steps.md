@@ -180,7 +180,7 @@ helm install my-kube-prometheus-stack prometheus-community/kube-prometheus-stack
 helm upgrade my-kube-prometheus-stack prometheus-community/kube-prometheus-stack -n monitoring -f prom-values.yml
 ```
 
-## Install Loki and Alloy
+## Install and Configure Loki, Alloy and Tempo
 ### Add Grafana repo
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
