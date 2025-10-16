@@ -36,6 +36,11 @@ newgrp docker
 ```
 
 ## Install Docker Compose 
+### Install using apt
+```
+sudo apt  install docker-compose
+```
+### OR
 1. Define the Docker configuration directory environment variable, defaulting to ~/.docker if not set:
 ```
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
