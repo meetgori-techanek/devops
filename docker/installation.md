@@ -62,5 +62,5 @@ chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 ```
 5. Verify the installation by checking the version:
 ```
-docker compose version 
+docker-compose version 
 ```
