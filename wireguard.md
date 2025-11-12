@@ -124,3 +124,34 @@ Bash
 # Show WireGuard interface details
 sudo wg show
 The output should display your public key, the private key hash, and the listening port (51820).
+
+
+### dump
+#### Check server’s allowed IPs and keys
+ensure your server /etc/wireguard/wg0.conf has the correct peer public key and allowed IPs.
+For example:\
+Server:
+```
+[Interface]
+Address = 10.8.0.1/24
+ListenPort = 51820
+PrivateKey = <server_private_key>
+
+[Peer]
+PublicKey = <client_public_key>
+AllowedIPs = 10.8.0.2/32
+```
+
+Client:
+```
+[Interface]
+Address = 10.8.0.2/24
+PrivateKey = <client_private_key>
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = <server_public_key>
+AllowedIPs = 0.0.0.0/0
+Endpoint = 54.91.198.90:51820
+PersistentKeepalive = 25
+```
