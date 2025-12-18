@@ -132,7 +132,11 @@ Expected metrics:
   "Resource": "*"
 }
 ```
-
+OR\
+Attach
+```
+CloudWatchAgentServerPolicy
+```
 ---
 
 ## Result
