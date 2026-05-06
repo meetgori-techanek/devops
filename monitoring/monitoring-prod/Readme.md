@@ -67,7 +67,7 @@ helm uninstall mimir -n monitoring
 
 ### Loki
 ```bash
-helm upgrade --install loki grafana-community/loki-distributed -f loki-values.yaml -n monitoring
+helm upgrade --install loki grafana-community/loki -f loki-values.yaml -n monitoring
 helm uninstall loki -n monitoring 
 ```
 
