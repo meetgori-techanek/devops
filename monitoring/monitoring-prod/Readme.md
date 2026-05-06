@@ -28,13 +28,16 @@ helm repo update
 
 **Chart Mapping:**
 
-| Component | Chart to use |
-|-----------|--------------|
-| Alloy     | `grafana/alloy` |
-| Mimir     | `grafana/mimir-distributed` |
-| Loki      | `grafana-community/loki-distributed` |
-| Tempo     | `grafana-community/tempo-distributed` |
-| Grafana   | `grafana-community/grafana` |
+
+| Component      | Chart to use                          | Github Url                                                                                                                                                                                  |
+| -------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Grafana        | `grafana-community/grafana`           | [https://github.com/grafana-community/helm-charts/blob/main/charts/grafana/README.md](https://github.com/grafana-community/helm-charts/blob/main/charts/grafana/README.md)                     |
+| Loki           | `grafana-community/loki`              | [https://github.com/grafana-community/helm-charts/blob/main/charts/loki/README.md](https://github.com/grafana-community/helm-charts/blob/main/charts/loki/README.md)                           |
+| Tempo          | `grafana-community/tempo-distributed` | [https://github.com/grafana-community/helm-charts/blob/main/charts/tempo-distributed/README.md](https://github.com/grafana-community/helm-charts/blob/main/charts/tempo-distributed/README.md) |
+| Alloy          | `grafana/alloy`                       | [https://github.com/grafana/helm-charts/blob/main/charts/alloy/README.md](https://github.com/grafana/helm-charts/blob/main/charts/alloy/README.md)                                             |
+| Mimir          | `grafana/mimir-distributed`           | [https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/README.md](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/README.md) |
+| K8S Monitoring | `grafana/k8s-monitoring`              | [https://github.com/grafana/k8s-monitoring-helm](https://github.com/grafana/k8s-monitoring-helm)                                                                                               |
+
 
 ---
 
@@ -46,6 +49,7 @@ helm repo update
 helm upgrade --install k8s-monitoring grafana/k8s-monitoring -f k8s-values.yaml -n monitoring
 helm uninstall k8s-monitoring -n monitoring
 ```
+### OR 
 
 ### Alloy
 ```bash
