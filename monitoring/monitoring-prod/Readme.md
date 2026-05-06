@@ -17,6 +17,7 @@ kubectl create namespace monitoring
 **References:**
 - https://www.linkedin.com/posts/jkroepke_helm-repository-migration-grafana-community-activity-741684…
 - https://github.com/grafana/helm-charts/tree/main/charts
+- https://grafana.com/docs/grafana/latest/
 
 ```bash
 helm repo add grafana https://grafana.github.io/helm-charts
