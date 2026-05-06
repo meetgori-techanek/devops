@@ -1,8 +1,6 @@
 # Monitoring Stack — Deployment Steps (EKS)
 
 > **Namespace:** `monitoring`  
-> **Working directory:** `ignek/monitoring-grafana-v2/`  
-> All commands are run from inside the `monitoring-grafana-v2/` folder.
 
 ---
 
