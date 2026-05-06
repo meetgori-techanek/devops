@@ -1,0 +1,106 @@
+cluster:
+  name: prod
+
+destinations:
+  mimir:
+    type: prometheus
+    url: http://mimir-gateway.monitoring.svc.cluster.local:80/api/v1/push
+    headers:
+      X-Scope-OrgID: anonymous
+    metrics:
+      enabled: true
+
+  loki:
+    type: loki
+    url: http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
+
+  tempo:
+    type: otlp
+    url: http://tempo-gateway.monitoring.svc.cluster.local:4317
+    protocol: grpc
+    tls:
+      insecure: true
+    metrics:
+      enabled: false
+    logs:
+      enabled: false
+
+hostMetrics:
+  enabled: true
+  destinations: [mimir]
+  collector: alloy-metrics
+  linuxHosts:
+    enabled: true
+
+clusterMetrics:
+  enabled: true
+  destinations: [mimir]
+  collector: alloy-metrics
+
+clusterEvents:
+  enabled: true
+  destinations: [loki]
+  collector: alloy-singleton
+
+podLogsViaLoki:
+  enabled: true
+  destinations: [loki]
+  collector: alloy-logs
+
+applicationObservability:
+  enabled: true
+  receivers:
+    otlp:
+      grpc:
+        enabled: true
+        port: 4317
+      http:
+        enabled: true
+        port: 4318
+  destinations: [tempo, mimir, loki]
+  collector: alloy-receiver
+
+collectors:
+  alloy-metrics:
+    presets: [clustered, statefulset]
+
+  alloy-singleton:
+    presets: [singleton]
+
+  alloy-logs:
+    presets: [filesystem-log-reader, daemonset]
+
+  alloy-receiver:
+    presets: [singleton]
+
+telemetryServices:
+  kube-state-metrics:
+    deploy: true
+  node-exporter:
+    deploy: true
+
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: alloy-ui
+      namespace: monitoring
+      annotations:
+        nginx.org/redirect-to-https: "true"
+        nginx.ingress.kubernetes.io/auth-type: basic
+        nginx.ingress.kubernetes.io/auth-secret: alloy-basic-auth
+        nginx.ingress.kubernetes.io/auth-realm: "Restricted"
+    spec:
+      ingressClassName: nginx-external
+      rules:
+        - host: alloy.external.xponential.ae
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: k8s-monitoring-alloy-metrics
+                    port:
+                      number: 12345
+      tls: []

@@ -1,0 +1,224 @@
+
+
+mimir:
+  structuredConfig:
+    server:
+      log_level: warn
+
+    ingest_storage:
+      enabled: false
+
+    common:
+      storage:
+        backend: s3
+        s3:
+          endpoint: s3.us-east-1.amazonaws.com
+          region: us-east-1
+          bucket_name: meetg-mimir-blocks
+          
+    blocks_storage:
+      backend: s3
+      s3:
+        bucket_name: meetg-mimir-blocks
+        endpoint: s3.us-east-1.amazonaws.com
+        region: us-east-1
+        
+    alertmanager_storage:
+      backend: s3
+      s3:
+        bucket_name: meetg-mimir-blocks
+        endpoint: s3.us-east-1.amazonaws.com
+        region: us-east-1
+      storage_prefix: alertmanager
+        
+    ruler_storage:
+      backend: s3
+      s3:
+        bucket_name: meetg-mimir-blocks
+        endpoint: s3.us-east-1.amazonaws.com
+        region: us-east-1
+      storage_prefix: ruler
+        
+    memberlist:
+      join_members:
+        - mimir-gossip-ring.monitoring.svc.cluster.local:7946
+      bind_addr:
+        - 0.0.0.0
+      bind_port: 7946
+
+    distributor:
+      ring:
+        kvstore:
+          store: memberlist
+        heartbeat_timeout: 1m
+
+    ingester:
+      push_grpc_method_enabled: true
+      ring:
+        kvstore:
+          store: memberlist
+        replication_factor: 1
+
+    store_gateway:
+      sharding_ring:
+        kvstore:
+          store: memberlist
+
+    compactor:
+      sharding_ring:
+        kvstore:
+          store: memberlist
+
+    frontend:
+      scheduler_address: mimir-query-scheduler.monitoring.svc.cluster.local:9095
+
+    query_scheduler:
+      service_discovery_mode: dns
+
+    limits:
+      compactor_blocks_retention_period: 672h #28 days
+      ingestion_rate: 100000
+      ingestion_burst_size: 2000000
+      max_global_series_per_user: 1000000
+
+ingester:
+  replicas: 1
+  persistentVolume:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  zoneAwareReplication:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+
+compactor:
+  replicas: 1
+  persistentVolume:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+store_gateway:
+  replicas: 1
+  persistentVolume:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  zoneAwareReplication:
+    enabled: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+distributor:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+querier:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+query_frontend:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m 
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+query_scheduler:
+  replicas: 1
+
+memberlist:
+  service:
+    enabled: true
+
+overrides_exporter:
+  enabled: false
+
+ruler:
+  enabled: true
+
+alertmanager:
+  enabled: true
+  persistentVolume:
+    enabled: false
+    storageClass: gp3-delete
+    size: 1Gi
+
+rollout_operator:
+  enabled: false
+
+gateway:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+minio:
+  enabled: false
+
+kafka:
+  enabled: false
+  
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: mimir-ui
+      namespace: monitoring
+      annotations:
+        nginx.org/redirect-to-https: "true"
+        nginx.ingress.kubernetes.io/auth-type: basic
+        nginx.ingress.kubernetes.io/auth-secret: mimir-basic-auth
+        nginx.ingress.kubernetes.io/auth-realm: "Restricted"
+    spec:
+      ingressClassName: nginx-external
+      rules:
+        - host: mimir.external.xponential.ae
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: mimir-query-frontend
+                    port:
+                      number: 8080
+      tls: []

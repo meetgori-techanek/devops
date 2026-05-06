@@ -1,0 +1,189 @@
+// ============================================================
+// LOGGING
+// ============================================================
+logging {
+  level  = "warn"
+  format = "logfmt"
+}
+
+// ============================================================
+// DISCOVERY
+// ============================================================
+discovery.kubernetes "pods" {
+  role = "pod"
+}
+
+discovery.kubernetes "nodes" {
+  role = "node"
+}
+
+// ============================================================
+// LOGS - Relabel + Source + Process + Write
+// ============================================================
+discovery.relabel "pod_logs" {
+  targets = discovery.kubernetes.pods.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_name"]
+    target_label  = "pod"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_name"]
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    target_label  = "node"
+  }
+
+  // Resolve app label from multiple sources with fallback
+  rule {
+    source_labels = [
+      "__meta_kubernetes_pod_label_app",
+      "__meta_kubernetes_pod_label_app_kubernetes_io_name",
+      "__meta_kubernetes_pod_name",
+    ]
+    regex        = "^(?:;)*([^;]+)"
+    target_label = "app"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace", "app"]
+    separator     = "/"
+    target_label  = "service"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+    separator     = "/"
+    target_label  = "job"
+  }
+
+  // Path to pod log files on the node
+  rule {
+    source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+    separator     = "/"
+    target_label  = "__path__"
+    replacement   = "/var/log/pods/*$1/*.log"
+  }
+
+  // Detect container runtime
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_id"]
+    regex         = "^(\\S+):\\/\\/.+$"
+    target_label  = "container_runtime"
+    replacement   = "$1"
+  }
+}
+
+loki.source.kubernetes "pod_logs" {
+  targets    = discovery.relabel.pod_logs.output
+  forward_to = [loki.process.pod_logs.receiver]
+}
+
+loki.process "pod_logs" {
+  stage.static_labels {
+    values = {
+      cluster = "prod",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+
+    batch_size = "1MiB"
+    batch_wait = "1s"
+
+    min_backoff_period  = "500ms"
+    max_backoff_period  = "5m"
+    max_backoff_retries = 5
+  }
+}
+
+// ============================================================
+// METRICS - Scrape + Remote Write to Mimir
+// ============================================================
+prometheus.scrape "pods" {
+  targets         = discovery.kubernetes.pods.targets
+  scrape_interval = "30s"
+  forward_to      = [prometheus.remote_write.mimir.receiver]
+
+  clustering {
+    enabled = true
+  }
+}
+
+prometheus.remote_write "mimir" {
+  endpoint {
+    url            = "http://mimir-gateway.monitoring.svc.cluster.local:80/api/v1/push"
+    remote_timeout = "30s"
+
+    headers = {
+      "X-Scope-OrgID" = "anonymous",
+    }
+
+    queue_config {
+      capacity             = 5000
+      max_samples_per_send = 1000
+      batch_send_deadline  = "10s"
+      min_shards           = 1
+      max_shards           = 5
+    }
+  }
+}
+
+// ============================================================
+// TRACES - OTLP Receiver + Exporter to Tempo
+// ============================================================
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+
+    cors {
+      allowed_origins = ["*"]
+      allowed_headers = ["*"]
+      max_age         = 600
+    }
+  }
+
+  output {
+    traces = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "tempo.monitoring.svc.cluster.local:4317"
+    tls {
+      insecure = true
+    }
+  }
+
+  sending_queue {
+    enabled       = true
+    num_consumers = 10
+    queue_size    = 1000
+  }
+
+  retry_on_failure {
+    enabled          = true
+    initial_interval = "5s"
+    max_interval     = "30s"
+    max_elapsed_time = "5m"
+  }
+}

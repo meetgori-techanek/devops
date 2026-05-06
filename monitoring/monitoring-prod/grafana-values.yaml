@@ -1,0 +1,131 @@
+# helm repo add grafana https://grafana.github.io/helm-charts
+# helm repo add grafana-community https://grafana-community.github.io/helm-charts
+# helm repo update
+# helm install grafana grafana-community/grafana -n monitoring -f values.yaml
+
+image:
+  repository: grafana/grafana
+  tag: "13.0.1"
+
+replicas: 1
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  ingressClassName: nginx-external
+  annotations:
+    nginx.org/redirect-to-https: "false"
+  hosts:
+    - grafana.monitoring.labmeet.xyz
+  path: /
+  pathType: Prefix
+  tls: []
+
+persistence:
+  enabled: false
+  size: 10Gi
+
+adminUser: admin
+adminPassword: admin123   # move to a K8s secret in production
+
+grafana.ini:
+  server:
+    root_url: http://grafana.monitoring.labmeet.xyz
+  analytics:
+    reporting_enabled: false
+    check_for_updates: false
+  security:
+    disable_initial_admin_creation: false
+  auth.anonymous:
+    enabled: false
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+
+      - name: Mimir
+        type: prometheus
+        uid: mimir
+        url: http://mimir-gateway.monitoring.svc.cluster.local/prometheus
+        access: proxy
+        isDefault: true
+        jsonData:
+          httpMethod: POST
+          httpHeaderName1: "X-Scope-OrgID"
+          exemplarTraceIdDestinations:
+            - name: traceID
+              datasourceUid: tempo
+        secureJsonData:
+          httpHeaderValue1: "anonymous"
+
+      - name: Loki
+        type: loki
+        uid: loki
+        url: http://loki-gateway.monitoring.svc.cluster.local:80
+        access: proxy
+        jsonData:
+          # FIX: wire Loki -> Tempo trace correlation
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: "traceID=(\\w+)"
+              name: TraceID
+              url: "http://tempo-gateway.monitoring.labmeet.xyz/trace/${__value.raw}"
+
+      # FIX: Tempo datasource needs jsonData for service graph, node graph, and trace-to-logs
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        url: http://tempo-gateway.monitoring.svc.cluster.local:80
+        access: proxy
+        jsonData:
+          tracesToLogsV2:
+            datasourceUid: loki
+            spanStartTimeShift: "-1m"
+            spanEndTimeShift: "1m"
+            filterByTraceID: true
+            filterBySpanID: false
+          serviceMap:
+            datasourceUid: mimir
+          nodeGraph:
+            enabled: true
+          lokiSearch:
+            datasourceUid: loki
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+startupProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  failureThreshold: 30
+  timeoutSeconds: 5
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 5
+  timeoutSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  failureThreshold: 3
+  timeoutSeconds: 3

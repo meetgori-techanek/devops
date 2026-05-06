@@ -1,0 +1,125 @@
+# Storage backend
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: meetg-tempo-traces
+      endpoint: s3.us-east-1.amazonaws.com
+      region: us-east-1
+
+# Enable OTLP receivers
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+
+# Ingester - 1 replica so replication_factor must be 1
+ingester:
+  replicas: 1
+  config:
+    replication_factor: 1
+  zoneAwareReplication:
+    enabled: false
+  persistence:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+distributor:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+querier:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+queryFrontend:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+compactor:
+  replicas: 1
+  config:
+    compaction:
+      block_retention: 672h
+  persistence:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+# Metrics generator
+metricsGenerator:
+  enabled: true
+  replicas: 1
+  persistence:
+    enabled: false
+    storageClass: gp3-delete
+    size: 2Gi
+  config:
+    storage:
+      path: /var/tempo/wal
+      remote_write:
+        - url: http://mimir-gateway.monitoring.svc.cluster.local:80/api/v1/push
+          send_exemplars: true
+          headers:
+            X-Scope-OrgID: anonymous
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Gateway
+gateway:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# Memcached for caching (enabled by default in chart)
+memcached:
+  enabled: true
+
+minio:
+  enabled: false
