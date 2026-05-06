@@ -11,7 +11,10 @@
 ```bash
 kubectl create namespace monitoring
 ```
-
+### Set Current context as monitoring ns
+```
+kubectl config set-context --current --namespace=monitoring
+```
 ## Helm Repos
 
 **References:**
