@@ -187,3 +187,5 @@ otelcol.exporter.otlp "tempo" {
     max_elapsed_time = "5m"
   }
 }
+
+// need to check this: https://chatgpt.com/c/6a157888-60e8-83ec-909a-01c5e427d081
