@@ -148,3 +148,28 @@ alloy:
       port: 4318
       targetPort: 4318
       protocol: TCP
+
+
+--------improvements
+Main issues:
+
+allowed_origins = ["*"]
+Too open for production. Restrict to known domains.
+tls.insecure = true
+Avoid in production unless traffic stays inside trusted private network.
+storagePath: /tmp/alloy
+/tmp is not ideal for production persistence.
+resources: {}
+You should define CPU/memory requests and limits.
+securityContext: {}
+Add non-root security settings.
+mounts.varlog: false
+For Kubernetes pod logs, usually /var/log/pods must be mounted.
+clustering.enabled: false
+Fine for small setups, but HA setups usually enable clustering or run multiple replicas.
+No retry/backpressure tuning
+Add queue/retry configs for Loki and Tempo exporters.
+No scrape/metrics pipeline
+Currently only logs + traces. No Prometheus metrics collection.
+No authentication
+Loki and Tempo endpoints are open internally.
