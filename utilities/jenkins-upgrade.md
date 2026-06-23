@@ -127,13 +127,14 @@ Add the Jenkins stable apt repo and install the specific version.
 sudo apt update
 
 # Add Jenkins signing key
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key \
-  | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
 
 # Add Jenkins stable repo
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/" \
-  | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
 sudo apt update
 
@@ -141,14 +142,13 @@ sudo apt update
 sudo apt install jenkins=2.555.3
 ```
 
-> ⚠️ If `2.555.3` is not available in the stable repo, install it from the weekly repo (`https://pkg.jenkins.io/debian`) using the same key steps but the weekly repo URL.
 
 Start Jenkins and check logs:
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl start jenkins
-sudo systemctl disable jenkins
+sudo systemctl enable jenkins
 sudo systemctl status jenkins
 
 # Watch logs for startup errors
@@ -165,37 +165,10 @@ java -jar /usr/share/jenkins/jenkins.war --version 2>/dev/null || \
 ---
 
 ## Step 5: Upgrade Plugins
-
-**Option A: Via Jenkins UI (recommended)**
-
 1. Go to `Manage Jenkins` > `Plugins` > `Updates`
 2. Click `Select All`
 3. Click `Download now and install after restart`
 4. Check `Restart Jenkins when installation is complete`
-
-**Option B: Via Jenkins CLI**
-
-```bash
-# Download Jenkins CLI jar
-wget http://localhost:8080/jnlpJars/jenkins-cli.jar
-
-# List plugins with updates
-java -jar jenkins-cli.jar -s http://localhost:8080/ \
-  -auth admin:<api-token> list-plugins | grep -E '\(.*\)' | awk '{print $1}'
-
-# Install all updates
-java -jar jenkins-cli.jar -s http://localhost:8080/ \
-  -auth admin:<api-token> install-plugin \
-  $(java -jar jenkins-cli.jar -s http://localhost:8080/ \
-    -auth admin:<api-token> list-plugins | grep -E '\(.*\)' | awk '{print $1}') \
-  -restart
-```
-
-After the restart, verify all plugins loaded without errors:
-
-`Manage Jenkins` > `Manage Old Data` and `System Log` - no red errors.
-
----
 
 ## Step 6: Pin Versions (Prevent Auto-Upgrades)
 
