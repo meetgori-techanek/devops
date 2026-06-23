@@ -19,6 +19,7 @@ sudo tar -czvf /tmp/jenkins-home-backup-$(date +%Y%m%d).tar.gz /var/lib/jenkins
 ```bash
 sudo systemctl stop jenkins
 sudo systemctl status jenkins   # confirm: inactive (dead)
+sudo systemctl disable jenkins
 ```
 
 ---
@@ -148,6 +149,7 @@ Start Jenkins and check logs:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl start jenkins
+sudo systemctl disable jenkins
 sudo systemctl status jenkins
 
 # Watch logs for startup errors
