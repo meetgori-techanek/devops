@@ -4,17 +4,7 @@
 **Scope:** Ubuntu 24.04.4 LTS, Java 25 LTS, Jenkins 2.555.3, Plugin upgrades, Version pinning
 
 ---
-
-> ⚠️ **Before you start:** Take a full server snapshot (EC2 AMI or equivalent). Back up `/var/lib/jenkins` and `/etc/default/jenkins`.
-
-```bash
-# Backup Jenkins home
-sudo tar -czvf /tmp/jenkins-home-backup-$(date +%Y%m%d).tar.gz /var/lib/jenkins
-```
-
----
-
-## Step 1: Stop Jenkins
+## Step 1: Stop Jenkins and enable prepare for shutdown
 
 ```bash
 sudo systemctl stop jenkins
