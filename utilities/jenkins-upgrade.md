@@ -79,7 +79,6 @@ Ubuntu 24.04 does not ship OpenJDK 25 in its default repos. Use the `openjdk-r` 
 
 ```bash
 sudo apt update
-sudo apt install -y software-properties-common
 sudo add-apt-repository ppa:openjdk-r/ppa -y
 sudo apt update
 sudo apt install -y openjdk-25-jdk
@@ -88,7 +87,7 @@ sudo apt install -y openjdk-25-jdk
 Verify installation:
 
 ```bash
-java -version
+java --version
 # Expected: openjdk version "25" ...
 
 javac -version
