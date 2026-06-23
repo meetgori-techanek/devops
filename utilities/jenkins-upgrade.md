@@ -181,7 +181,7 @@ apt-mark showhold
 sudo apt-mark hold jenkins
 ```
 
-### Prevent Ubuntu Unattended Upgrades
+### Prevent Ubuntu Unattended Upgrades(Optional)
 
 This stops the OS from auto-applying security/kernel patches without your control.
 
