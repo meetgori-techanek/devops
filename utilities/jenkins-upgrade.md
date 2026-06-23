@@ -244,28 +244,6 @@ systemctl is-enabled apt-daily-upgrade.timer
 
 ---
 
-## Rollback Plan
-
-If Jenkins fails to start after the upgrade:
-
-```bash
-# Stop Jenkins
-sudo systemctl stop jenkins
-
-# Restore Jenkins home from backup
-sudo tar -xzvf /tmp/jenkins-home-backup-<date>.tar.gz -C /
-
-# Downgrade Jenkins (example to previous version)
-sudo apt-get install jenkins=<previous-version>
-
-# Restore previous Java (if needed)
-sudo update-alternatives --config java
-
-sudo systemctl start jenkins
-```
-
----
-
 ## References
 
 - Jenkins 2.555.3 changelog: https://www.jenkins.io/changelog/2.555.3/
