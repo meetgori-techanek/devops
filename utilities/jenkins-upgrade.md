@@ -234,6 +234,29 @@ systemctl is-enabled apt-daily-upgrade.timer
 
 ---
 
+## Step: 8 upgrade java version and stuff on workes.
+## Step: 9 Check for depricated plugins
+> As of now extended choise paramter plugin is depricated to find usage accross pipeline
+> Run this from the Jenkins script console (Manage Jenkins > Script Console):
+```
+import jenkins.model.Jenkins
+
+def keyword = "extendedChoice"
+def results = []
+
+Jenkins.instance.getAllItems(Job).each { job ->
+  try {
+    def config = job.configFile?.asString() ?: ""
+    if (config.contains(keyword)) {
+      results << job.fullName
+    }
+  } catch (e) {}
+}
+
+results.each { println it }
+println results.isEmpty() ? "No jobs using extendedChoice" : "Found ${results.size()} job(s)"
+```
+
 ## References
 
 - Jenkins 2.555.3 changelog: https://www.jenkins.io/changelog/2.555.3/
