@@ -181,32 +181,6 @@ apt-mark showhold
 sudo apt-mark hold jenkins
 ```
 
-### Prevent Ubuntu Unattended Upgrades(Optional)
-
-This stops the OS from auto-applying security/kernel patches without your control.
-
-```bash
-sudo nano /etc/apt/apt.conf.d/20auto-upgrades
-```
-
-Set both values to `"0"`:
-
-```
-APT::Periodic::Update-Package-Lists "0";
-APT::Periodic::Unattended-Upgrade "0";
-```
-
-> ⚠️ Disabling unattended upgrades means you are responsible for applying security patches manually on a schedule. Recommended: run `sudo apt update && sudo apt upgrade` during your maintenance windows.
-
-Disable the timer completely if preferred:
-
-```bash
-sudo systemctl disable apt-daily.timer
-sudo systemctl disable apt-daily-upgrade.timer
-sudo systemctl stop apt-daily.timer
-sudo systemctl stop apt-daily-upgrade.timer
-```
-
 ---
 
 ## Step 7: Post-Upgrade Verification
