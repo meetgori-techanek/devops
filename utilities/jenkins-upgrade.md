@@ -24,7 +24,7 @@ sudo apt dist-upgrade -y
 sudo reboot
 ```
 
-After reboot:
+After reboot upgrade to newer ubuntu version:
 
 ```bash
 sudo do-release-upgrade
@@ -45,22 +45,6 @@ After the upgrade completes and reboots, verify:
 lsb_release -a
 # Expected: Ubuntu 24.04.x LTS
 ```
-
-### If you are already on Ubuntu 24.04.x (getting to 24.04.4)
-
-```bash
-sudo apt update
-sudo apt dist-upgrade -y
-sudo reboot
-```
-
-After reboot, verify the point release:
-
-```bash
-lsb_release -a
-# Expected: Ubuntu 24.04.4 LTS
-```
-
 ---
 
 ## Step 3: Install Java 25 LTS
@@ -90,23 +74,7 @@ Set Java 25 as the system default (if multiple Java versions are installed):
 sudo update-alternatives --config java
 # Select the entry for java-25-openjdk-amd64
 ```
-
-Set `JAVA_HOME` for Jenkins:
-
-```bash
-# Find the Java 25 path
-update-java-alternatives -l | grep java-25
-
-# Edit Jenkins defaults
-sudo nano /etc/default/jenkins
-```
-
-Add or update this line:
-
-```bash
-JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
-```
-
+> And select latest version
 ---
 
 ## Step 4: Upgrade Jenkins to 2.555.3
@@ -182,6 +150,12 @@ sudo apt-mark hold jenkins
 ```
 
 ---
+
+## Step 6: if you have worker node.
+1. upgrade packages
+2. upgrade ubuntu version
+3. upgrade java version
+4. verify jenkins able to run pipeline on it.
 
 ## Step 7: Post-Upgrade Verification
 
