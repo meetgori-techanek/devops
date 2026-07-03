@@ -16,7 +16,7 @@ sudo systemctl disable jenkins
 
 ## Step 2: Upgrade Ubuntu to 24.04.4 LTS
 
-### If you are currently on Ubuntu 22.04
+### If you are currently on Ubuntu 22.04 then upgrade package
 
 ```bash
 sudo apt update
