@@ -150,14 +150,50 @@ sudo apt-mark hold jenkins
 ```
 
 ---
+## Step 7: Disable Unattended Upgrades on Jenkins Server
 
-## Step 6: if you have worker node.
+### Step 1: Stop the periodic trigger
+
+```
+sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+```
+
+Set both lines to 0:
+
+```
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "0";
+```
+
+### Step 2: Disable and stop the systemd timers and service
+
+```
+sudo systemctl disable --now unattended-upgrades.service
+sudo systemctl disable --now apt-daily.timer
+sudo systemctl disable --now apt-daily-upgrade.timer
+```
+
+### Step 3: Verify it is off
+
+```
+systemctl list-timers | grep apt
+```
+
+Should return nothing running.
+
+```
+cat /etc/apt/apt.conf.d/20auto-upgrades
+```
+
+Should show both values as 0.
+
+## Step 8: if you have worker node.
 1. upgrade packages
 2. upgrade ubuntu version
 3. upgrade java version
 4. verify jenkins able to run pipeline on it.
 
-## Step 7: Post-Upgrade Verification
+## Step 9: Post-Upgrade Verification
 
 ```bash
 # OS
@@ -182,8 +218,7 @@ systemctl is-enabled apt-daily-upgrade.timer
 
 ---
 
-## Step: 8 upgrade java version and stuff on workes.
-## Step: 9 Check for depricated plugins
+## Step: 10 Check for depricated plugins
 > As of now extended choise paramter plugin is depricated to find usage accross pipeline
 > Run this from the Jenkins script console (Manage Jenkins > Script Console):
 ```
