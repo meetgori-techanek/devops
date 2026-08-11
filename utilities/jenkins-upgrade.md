@@ -186,7 +186,7 @@ cat /etc/apt/apt.conf.d/20auto-upgrades
 ```
 
 Should show both values as 0.
-
+>This stops all automatic updates including security patches, so you'll need to run ```sudo apt update && sudo apt upgrade``` manually on your own schedule going forward, ideally outside pipeline run windows.
 ## Step 8: if you have worker node.
 1. upgrade packages
 2. upgrade ubuntu version
