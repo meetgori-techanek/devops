@@ -73,8 +73,11 @@ sudo apt-get update
 sudo apt-get install elasticsearch=8.19.*
 
 sudo systemctl start elasticsearch
-GET /
-GET /_cluster/health?pretty
+```
+valiate 
+```
+curl -X GET "localhost:9200/" -u elastic:**********
+curl -X GET "localhost:9200/_cluster/health?pretty" -u elastic:**********
 ```
 
 ## 5. Upgrade Kibana
@@ -103,8 +106,9 @@ sudo systemctl start filebeat
 ## 8. Disable ML Upgrade Mode
 
 ```
-POST /_ml/set_upgrade_mode?enabled=false&pretty
+curl -X POST "localhost:9200/_ml/set_upgrade_mode?enabled=false&pretty" -u elastic:**********
 ```
+
 
 ## 9. Upgrade Ingest Agents on App Servers
 
@@ -149,8 +153,9 @@ Back up `filebeat.yml` and `metricbeat.yml` on these two servers before the jump
 ## 10. Validation
 
 ```
-GET /_cluster/health?pretty
-GET /_cat/nodes?v&h=name,node.role,master,ip,version
+curl -X GET "localhost:9200/_cluster/health?pretty" -u elastic:**********
+curl -X GET "localhost:9200/_cat/nodes?v&h=name,node.role,master,ip,version" -u elastic:**********
+curl -X GET "localhost:5601/api/status" -u elastic:**********
 ```
 
 Confirm:
