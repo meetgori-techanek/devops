@@ -27,12 +27,16 @@ dev-process-new and prod-process-new are on 7.17.29, a major version behind the 
 # Phase 1: 8.18.3 to 8.19.x
 
 ## 1. Pre-Upgrade Checks
-
+> Cluster health: shows overall status (green/yellow/red).\
+> Root /: shows version info. \
+> Cat nodes: lists nodes and resource usage. \
+> Doc count mapping: checks for a known field mapping issue that can block upgrades.
 ```
-GET /_cluster/health?pretty
-GET /
-GET /_cat/nodes?v
-GET _all/_mapping/field/_doc_count
+curl -X GET "localhost:9200/_cluster/health?pretty" -u elastic:<password>
+curl -X GET "localhost:9200/" -u elastic:<password>
+curl -X GET "localhost:9200/_cat/nodes?v" -u elastic:<password>
+
+curl -X GET "localhost:9200/_all/_mapping/field/_doc_count?pretty" -u elastic:**********
 ```
 
 Fix cluster health if not green. Run Kibana Upgrade Assistant (Stack Management > Upgrade Assistant) and resolve all critical issues.
@@ -43,10 +47,11 @@ https://www.elastic.co/guide/en/elasticsearch/reference/8.19/migrating-8.19.html
 ## 2. Prepare Cluster
 
 Flush indices and enable ML upgrade mode:
-
+>Flush saves in-memory data to disk.\
+>ML upgrade mode pauses ML jobs during the upgrade.
 ```
-POST /_flush?pretty
-POST /_ml/set_upgrade_mode?enabled=true&pretty
+curl -X POST "localhost:9200/_flush?pretty" -u elastic:**********
+curl -X POST "localhost:9200/_ml/set_upgrade_mode?enabled=true&pretty" -u elastic:**********
 ```
 
 ## 3. Stop Services
