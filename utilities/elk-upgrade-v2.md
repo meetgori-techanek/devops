@@ -36,7 +36,18 @@ curl -X GET "localhost:9200/_cat/nodes?v" -u elastic:**********
 curl -X GET "localhost:9200/_all/_mapping/field/_doc_count?pretty" -u elastic:**********
 ```
 
-Fix cluster health if not green (yellow from single-node unassigned replicas is expected and not blocking). Run Kibana Upgrade Assistant (Stack Management > Upgrade Assistant) and resolve critical issues.
+Fix cluster health if not green (yellow from single-node unassigned replicas is expected and not blocking).
+
+**Launch the Kibana Upgrade Assistant** (on the current 8.18.3 Kibana, before touching any packages):
+1. Log into Kibana in the browser: `http://<server-ip>:5601`
+2. Open the hamburger menu (top left) > scroll to **Management** > **Stack Management**
+3. In the left sidebar under **Kibana**, click **Upgrade Assistant**
+   Direct path: Stack Management > Upgrade Assistant
+4. Two tabs appear: **Elasticsearch** and **Kibana**. Check both.
+5. Anything marked **Critical** must be resolved before upgrading, click into each issue, it will offer **Reindex** or **Mark as read-only** for old indices, or show manual config changes needed for deprecated settings.
+6. **Warning**-level issues don't block the upgrade but are worth reviewing and fixing where the resolution is "Automated".
+
+Resolve everything Critical here, on 8.18.3, before starting Phase 1. This is the same check to repeat again after Phase 1 (now on 8.19.x Kibana) before starting Phase 3.
 
 Review 8.19 breaking changes: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/migrating-8.19.html
 
@@ -246,9 +257,22 @@ Note: repeat this OS upgrade on each app server too, since Filebeat/Metricbeat 8
 
 This step is not optional. Elasticsearch 9.x will refuse to even boot if any pre-8.0 index isn't marked read-only or reindexed, this crashed the test run with an `IllegalStateException` on `.apm-custom-link` (created in 7.10.1), which the Upgrade Assistant would have flagged in advance.
 
-In Kibana (8.19.x), go to Stack Management > Upgrade Assistant > Elasticsearch tab. Resolve every critical issue, reindex or mark read-only as recommended. On the test run this list included several old `apm-*`, `metricbeat-*`, `filebeat-*`, and `.transform-notifications-*` indices from 2025.05.14 (7.11/7.12 era), plus `.apm-custom-link`, which was not in the assistant's list and required a manual fix (see below).
+**Launch the Kibana Upgrade Assistant** (on the 8.19.x Kibana from Phase 1, before starting any 9.5.1 package installs):
+1. Log into Kibana: `http://<server-ip>:5601`
+2. Hamburger menu > **Stack Management** > **Upgrade Assistant** (left sidebar, under Kibana)
+3. Open the **Elasticsearch** tab first:
+   - Every row marked **Critical** must show "Reindex complete" or a read-only resolution before proceeding.
+   - Click into any row still showing "Recommended: reindex" (not yet actioned) and run the reindex from there.
+   - On the test run this list included several old `apm-*`, `metricbeat-*`, `filebeat-*`, and `.transform-notifications-*` indices from 2025.05.14 (7.11/7.12 era). All 8 critical entries needed "Reindex complete" before Elasticsearch 9.5.1 would boot.
+4. Open the **Kibana** tab:
+   - Confirm **Critical: 0**. Warnings (config deprecations, legacy OpenSSL provider, etc.) don't block the upgrade but note them for later cleanup.
+   - Any row with an **Automated** resolution can be clicked and applied directly from here.
+5. **Important gap found in testing**: `.apm-custom-link` (a 7.10.1-era index) did **not** appear in the Elasticsearch tab's list but still blocked Elasticsearch 9.5.1 from starting. Don't treat a clean Upgrade Assistant screen as a full guarantee, manually check for any other old indices the assistant might have missed:
 
-Also check the Kibana tab of the Upgrade Assistant for plugin-level deprecation warnings (config settings, not usually blocking, but worth noting for cleanup).
+```bash
+curl -X GET "localhost:9200/_cat/indices?v" -u elastic:********** | awk '{print $3}'
+```
+Cross-check any suspicious old index (especially ones tied to features you barely use, like `.apm-custom-link`) against the fix below.
 
 Manually verify no other pre-8.0 indices are missed:
 
